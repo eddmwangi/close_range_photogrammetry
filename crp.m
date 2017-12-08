@@ -135,5 +135,8 @@ drk = getKappaDiff( IP1(4), IP1(5), IP1(6) );
 
 % Solving for the six unknowns using control points
 
-A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw, drp, drk ) % Photo1 A matrix
-A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R1, f2, drw, drp, drk ) % Photo2 A matrix
+A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw, drp, drk ); % Photo1 A matrix
+A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw, drp, drk ); % Photo2 A matrix
+
+L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1) % Photo1 L matrix
+L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2) % Photo2 L matrix
