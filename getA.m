@@ -13,7 +13,7 @@ function A = getA(IP,x,y,X,Y,Z,R,f,drw,drp,drk)
 	% Derived coefficients
 
 	n = length(x); % number of data points. =len(y)=len(X)=len(Y)
-	A = zeros(n*2,6);
+	A = zeros(n*2,9);
 
 	for m=1:n
 		a = m*2; % indices are a nad m
