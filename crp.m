@@ -61,12 +61,27 @@ y2 = [
 ];
 
 % Ground coordinates of Control Points
+% Coordinate format: CP = [CPX CPY CPZ]
 
-CP = [
-	2594.79	695.81	2022.36
-	2607.84	206.06	2080.31
-	3310.35	816.31	1981.42
-	3263.10	245.96	2129.39
+CPX = [
+	2594.79
+	2607.84
+	3310.35
+	3263.10
+];
+
+CPY = [
+	695.81
+	206.06
+	816.31
+	245.96
+];
+
+CPZ = [
+	2022.36
+	2080.31
+	1981.42
+	2129.39
 ];
 
 % IP = [XO, YO, ZO, w, p, k] , initial parameter format
