@@ -80,7 +80,7 @@ CPY = [
 CPZ = [
 	2022.36
 	2080.31
-	1981.42
+	1986.42
 	2129.39
 ];
 
@@ -129,14 +129,23 @@ R2 = getR( IP1(4), IP1(5), IP1(6) );
 
 % Differentials
 
-drw = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
-drp = getPhiDiff( IP1(4), IP1(5), IP1(6) );
-drk = getKappaDiff( IP1(4), IP1(5), IP1(6) );
+drw1 = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
+drp1 = getPhiDiff( IP1(4), IP1(5), IP1(6) );
+drk1 = getKappaDiff( IP1(4), IP1(5), IP1(6) );
+
+drw2 = getOmegaDiff( IP2(4), IP2(5), IP2(6) );
+drp2 = getPhiDiff( IP2(4), IP2(5), IP2(6) );
+drk2 = getKappaDiff( IP2(4), IP2(5), IP2(6) );
 
 % Solving for the six unknowns using control points
 
-A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw, drp, drk ); % Photo1 A matrix
-A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw, drp, drk ); % Photo2 A matrix
+A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw1, drp1, drk1 ) % Photo1 A matrix
+A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw2, drp2, drk2 ) % Photo2 A matrix
 
-L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1) % Photo1 L matrix
-L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2) % Photo2 L matrix
+L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
+L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
+
+% Get shift matrix, DX: DX = A' * L
+
+dx1 = getDx(A1, L1); % photo1 shift elements
+dx2 = getDx(A2, L2); % photo2 shift elements
