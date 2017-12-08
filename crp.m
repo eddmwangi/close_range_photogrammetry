@@ -69,10 +69,11 @@ CP = [
 	3263.10	245.96	2129.39
 ]
 
+% IP = [XO, YO, ZO, w, p, k] , initial parameter format
+
 % Photo 1, approximate values for E.O Parameters
 
-% [XO, YO, ZO, w, p, k]
-p1 = [
+IP1 = [
 	2480
 	378
 	559
@@ -83,8 +84,7 @@ p1 = [
 
 % Photo 2, approximate values for E.O Parameters
 
-% [XO, YO, ZO, w, p, k]
-p2 = [
+IP2 = [
 	3033
 	377
 	469
