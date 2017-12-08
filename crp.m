@@ -108,5 +108,12 @@ f1 = 165.89; % Photo 1 f
 f2 = 165.77; % Photo 2 f
 
 %  Rotational Matrices
+
 R1 = getR( IP1(4), IP1(5), IP1(6) );
 R2 = getR( IP1(4), IP1(5), IP1(6) );
+
+% Differentials
+
+drw = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
+drp = getPhiDiff( IP1(4), IP1(5), IP1(6) );
+drk = getKappaDiff( IP1(4), IP1(5), IP1(6) );
