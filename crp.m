@@ -132,3 +132,8 @@ R2 = getR( IP1(4), IP1(5), IP1(6) );
 drw = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
 drp = getPhiDiff( IP1(4), IP1(5), IP1(6) );
 drk = getKappaDiff( IP1(4), IP1(5), IP1(6) );
+
+% Solving for the six unknowns using control points
+
+A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw, drp, drk ) % Photo1 A matrix
+A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R1, f2, drw, drp, drk ) % Photo2 A matrix
