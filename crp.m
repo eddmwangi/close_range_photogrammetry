@@ -110,11 +110,25 @@ IP2 = [
 
 % Approx coordinates of unknown points
 
-AP = [
-	2606	439	2088
-	3320	488	2107
-	3015	645	2008
-	3013	424	2188
+APX = [
+	2606
+	3320
+	3015
+	3013
+];
+
+APY = [
+	439
+	488
+	645
+	424
+];
+
+APZ= [
+	2088
+	2107
+	2008
+	2188
 ];
 
 % Focal lengths
@@ -145,7 +159,7 @@ for m=1:12
 
 	A1 = getControlA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw1, drp1, drk1 ); % Photo1 A matrix
 
-	L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
+	L1 = getControlL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
 
 	% Get shift matrix, dx
 
@@ -158,7 +172,7 @@ for m=1:12
 		break
 	end
 end
-EO1 = IP1	% Photo1 E.O params
+EO1 = IP1;	% Photo1 E.O params
 
 % Photo2
 for m=1:202
@@ -179,7 +193,7 @@ for m=1:202
 
 	A2 = getControlA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw2, drp2, drk2 ); % Photo2 A matrix
 
-	L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
+	L2 = getControlL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
 
 	% Get shift matrix, dx
 
@@ -192,4 +206,34 @@ for m=1:202
 		break
 	end
 end
-EO2 = IP2	% Photo2 E.O params
+EO2 = IP2;	% Photo2 E.O params
+
+
+dx = zeros(12,1);	sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
+
+for m=1:2
+	flag = dx;
+	A = getA(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
+
+	L = getL(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2); % Combined L matrix
+
+	dx = getDx(A, L); % shift elements for unknown points
+
+	for i=1:4
+		m = i*3;
+		sx(i) = dx(m-2); % photo 1 shifts
+		sy(i) = dx(m-1); % photo 2 shifts
+		sz(i) = dx(m); % photo 2 shifts
+	end
+
+	APX = APX+sx;
+	APY = APY+sy;
+	APZ = APZ+sz;
+
+	if flag - dx <= zeros(12,1)
+		m
+		break
+	end
+end
+
+RESULTS = [ APX APY APZ ]
