@@ -145,7 +145,7 @@ for m=1:12
 
 	A1 = getControlA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw1, drp1, drk1 ); % Photo1 A matrix
 
-	L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
+	L1 = getControlL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
 
 	% Get shift matrix, dx
 
@@ -179,7 +179,7 @@ for m=1:202
 
 	A2 = getControlA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw2, drp2, drk2 ); % Photo2 A matrix
 
-	L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
+	L2 = getControlL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
 
 	% Get shift matrix, dx
 
