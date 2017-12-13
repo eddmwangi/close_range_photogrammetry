@@ -195,4 +195,6 @@ end
 EO2 = IP2;	% Photo2 E.O params
 
 
-A = getA(EO1, EO2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2);
+A = getA(EO1, EO2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
+
+L2 = getL(IP1, IP2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2) % Combined L matrix
