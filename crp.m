@@ -158,7 +158,7 @@ for m=1:12
 		break
 	end
 end
-EO1 = IP1	% Photo1 E.O params
+EO1 = IP1;	% Photo1 E.O params
 
 % Photo2
 for m=1:202
@@ -192,4 +192,7 @@ for m=1:202
 		break
 	end
 end
-EO2 = IP2	% Photo2 E.O params
+EO2 = IP2;	% Photo2 E.O params
+
+
+A = getA(EO1, EO2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2);
