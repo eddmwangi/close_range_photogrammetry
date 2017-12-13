@@ -122,30 +122,74 @@ AP = [
 f1 = 165.89; % Photo 1 f
 f2 = 165.77; % Photo 2 f
 
-%  Rotational Matrices
+%  Get Exterior orientation parameters
 
-R1 = getR( IP1(4), IP1(5), IP1(6) );
-R2 = getR( IP1(4), IP1(5), IP1(6) );
+dx1 = zeros(6, 1); dx2 = zeros(6, 1);
 
-% Differentials
+% Photo1
+for m=1:12
 
-drw1 = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
-drp1 = getPhiDiff( IP1(4), IP1(5), IP1(6) );
-drk1 = getKappaDiff( IP1(4), IP1(5), IP1(6) );
+	flag = dx1;
 
-drw2 = getOmegaDiff( IP2(4), IP2(5), IP2(6) );
-drp2 = getPhiDiff( IP2(4), IP2(5), IP2(6) );
-drk2 = getKappaDiff( IP2(4), IP2(5), IP2(6) );
+	%  Rotational Matrix
 
-% Solving for the six unknowns using control points
+	R1 = getR( IP1(4), IP1(5), IP1(6) );
 
-A1 = getA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw1, drp1, drk1 ) % Photo1 A matrix
-A2 = getA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw2, drp2, drk2 ) % Photo2 A matrix
+	% Differentials
 
-L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
-L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
+	drw1 = getOmegaDiff( IP1(4), IP1(5), IP1(6) );
+	drp1 = getPhiDiff( IP1(4), IP1(5), IP1(6) );
+	drk1 = getKappaDiff( IP1(4), IP1(5), IP1(6) );
 
-% Get shift matrix, DX: DX = A' * L
+	% Solving for the six unknowns using control points
 
-dx1 = getDx(A1, L1); % photo1 shift elements
-dx2 = getDx(A2, L2); % photo2 shift elements
+	A1 = getControlA(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1, drw1, drp1, drk1 ); % Photo1 A matrix
+
+	L1 = getL(IP1, x1c, y1c, CPX, CPY, CPZ, R1, f1); % Photo1 L matrix
+
+	% Get shift matrix, dx
+
+	dx1 = getDx(A1, L1); % photo1 shift elements
+
+	IP1 = IP1 + dx1;
+
+	if flag - dx1 == zeros(6,1)
+		m
+		break
+	end
+end
+EO1 = IP1	% Photo1 E.O params
+
+% Photo2
+for m=1:202
+
+	flag = dx2;
+
+	%  Rotational Matrix
+
+	R2 = getR( IP1(4), IP1(5), IP1(6) );
+
+	% Differentials
+
+	drw2 = getOmegaDiff( IP2(4), IP2(5), IP2(6) );
+	drp2 = getPhiDiff( IP2(4), IP2(5), IP2(6) );
+	drk2 = getKappaDiff( IP2(4), IP2(5), IP2(6) );
+
+	% Solving for the six unknowns using control points
+
+	A2 = getControlA(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2, drw2, drp2, drk2 ); % Photo2 A matrix
+
+	L2 = getL(IP2, x2c, y2c, CPX, CPY, CPZ, R2, f2); % Photo2 L matrix
+
+	% Get shift matrix, dx
+
+	dx2 = getDx(A2, L2); % photo2 shift elements
+
+	IP2 = IP2 + dx2;
+
+	if (flag - dx2) <= zeros(6, 1)
+		m
+		break
+	end
+end
+EO2 = IP2	% Photo2 E.O params
