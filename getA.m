@@ -1,51 +1,161 @@
-function A = getA(IP,x,y,X,Y,Z,R,f,drw,drp,drk)
+function A = getA(IP1,IP2,x1,x2,y1,y2,X,Y,Z,R1,R2,f1,f2,drw1,drw2,drp1,drp2,drk1,drk2)
 	format short
 	%%%%%%% input parameters are:
-	% IP: Initial Parameter matrix
-	% X, Y: Ground control data values
-	% x, y: Photo coordinate data values
-	% R: Rotational matrix
-	% f: focal length of camera
-	% drw, drp, drk: differential elements of the rotational elements
+	% IP1: Exterior orientation Parameter for photo 1
+	% IP2: Exterior orientation Parameter for photo 2
+	% X, Y, Z: Ground control data values
+	% x1, y1: Photo 1 coordinate data values
+	% x2, y2: Photo 2 coordinate data values
+	% R1: Rotational matrix, Photo 1
+	% R2: Rotational matrix, Photo 2
+	% f1: focal length of camera for photo 1
+	% f2: focal length of camera for photo 2
+	% drw1, drp1, drk1: differential elements of the rotational elements, in photo 1
+	% drw2, drp2, drk2: differential elements of the rotational elements, in photo 2
 
 	% Calculate differentials that make the elements of the A matrix
 
 	% Derived coefficients
 
-	n = length(x); % number of data points. =len(y)=len(X)=len(Y)
-	A = zeros(n*2,9);
+	n = length(x1); % number of data points. =len(y)=len(X)=len(Y)
+	A = zeros(n*4,18);
 
 	for m=1:n
-		a = m*2; % indices are a nad m
+		a = m*4; % indices are a nad m
 
 		%%elements from differentials of F1
-		A(a-1,1) = ( -x(m)*R(3,1) - f*R(1,1) ); % dxo
-		A(a-1,2) = ( x(m)*R(3,3) + f*R(1,3) ); % dyo
-		A(a-1,3) = ( -x(m)*R(3,2) - f*R(1,2) ); % dzo
+		A(a-3,1) = ( -x1(m)*R1(3,1) - f1*R1(1,1) ); % dxo1
+		A(a-2,1) = ( -x2(m)*R2(3,1) - f2*R2(1,1) ); % dxo2
 
-		A(a-1,4) = x(m)*( drw(3,1)*(X(m)-IP(1)) + drw(3,2)*(Z(m)-IP(3)) - drw(3,3)*(Y(m)-IP(2)) ) + f*( drw(1,1)*(X(m)-IP(1)) + drw(1,2)*(Z(m)-IP(3)) - drw(1,3)*(Y(m)-IP(2)) ); % dw
+		A(a-3,2) = ( x1(m)*R1(3,3) + f1*R1(1,3) ); % dyo1
+		A(a-2,2) = ( x2(m)*R2(3,3) + f2*R2(1,3) ); % dyo2
 
-		A(a-1,5) = x(m)*( drp(3,1)*(X(m)-IP(1)) + drp(3,2)*(Z(m)-IP(3)) - drp(3,3)*(Y(m)-IP(2)) ) + f*( drp(1,1)*(X(m)-IP(1)) + drp(1,2)*(Z(m)-IP(3)) - drp(1,3)*(Y(m)-IP(2)) ); % dp
+		A(a-3,3) = ( -x1(m)*R1(3,2) - f1*R1(1,2) ); % dzo1
+		A(a-2,3) = ( -x1(m)*R1(3,2) - f1*R1(1,2) ); % dzo2
 
-		A(a-1,6) = x(m)*( drk(3,1)*(X(m)-IP(1)) + drk(3,2)*(Z(m)-IP(3)) - drk(3,3)*(Y(m)-IP(2)) ) + f*( drk(1,1)*(X(m)-IP(1)) + drk(1,2)*(Z(m)-IP(3)) - drk(1,3)*(Y(m)-IP(2)) ); % dk
+		A(a-3,4) = x1(m)*( drw1(3,1)*(X(m)-IP1(1)) + drw1(3,2)*(Z(m)-IP1(3)) - drw1(3,3)*(Y(m)-IP1(2)) ) + f1*( drw1(1,1)*(X(m)-IP1(1)) + drw1(1,2)*(Z(m)-IP1(3)) - drw1(1,3)*(Y(m)-IP1(2)) ); % dw1
+		A(a-2,4) = x2(m)*( drw2(3,1)*(X(m)-IP2(1)) + drw2(3,2)*(Z(m)-IP2(3)) - drw2(3,3)*(Y(m)-IP2(2)) ) + f2*( drw2(1,1)*(X(m)-IP2(1)) + drw2(1,2)*(Z(m)-IP2(3)) - drw2(1,3)*(Y(m)-IP2(2)) ); % dw2
 
-		A(a-1,7) = ( x(m)*R(3,1) + f*R(1,1) ); % dxa
-		A(a-1,8) = ( -x(m)*R(3,3) - f*R(1,3) ); % dya
-		A(a-1,9) = ( x(m)*R(3,2) + f*R(1,2) ); % dza
+		A(a-3,5) = x1(m)*( drp1(3,1)*(X(m)-IP1(1)) + drp1(3,2)*(Z(m)-IP1(3)) - drp1(3,3)*(Y(m)-IP1(2)) ) + f1*( drp1(1,1)*(X(m)-IP1(1)) + drp1(1,2)*(Z(m)-IP1(3)) - drp1(1,3)*(Y(m)-IP1(2)) ); % dp1
+		A(a-2,5) = x2(m)*( drp2(3,1)*(X(m)-IP2(1)) + drp2(3,2)*(Z(m)-IP2(3)) - drp2(3,3)*(Y(m)-IP2(2)) ) + f1*( drp2(1,1)*(X(m)-IP2(1)) + drp2(1,2)*(Z(m)-IP2(3)) - drp2(1,3)*(Y(m)-IP2(2)) ); % dp2
+
+		A(a-3,6) = x1(m)*( drk1(3,1)*(X(m)-IP1(1)) + drk1(3,2)*(Z(m)-IP1(3)) - drk1(3,3)*(Y(m)-IP1(2)) ) + f1*( drk1(1,1)*(X(m)-IP1(1)) + drk1(1,2)*(Z(m)-IP1(3)) - drk1(1,3)*(Y(m)-IP1(2)) ); % dk1
+		A(a-2,6) = x2(m)*( drk2(3,1)*(X(m)-IP2(1)) + drk2(3,2)*(Z(m)-IP2(3)) - drk2(3,3)*(Y(m)-IP2(2)) ) + f2*( drk2(1,1)*(X(m)-IP2(1)) + drk2(1,2)*(Z(m)-IP2(3)) - drk2(1,3)*(Y(m)-IP2(2)) ); % dk2
+
+		if m == 1
+			A(a-3,7) = ( x1(m)*R1(3,1) + f1*R1(1,1) ); % dxa1
+			A(a-2,7) = ( x2(m)*R2(3,1) + f2*R2(1,1) ); % dxa2
+
+			A(a-3,8) = ( -x1(m)*R1(3,3) - f1*R1(1,3) ); % dya1
+			A(a-2,8) = ( -x2(m)*R2(3,3) - f2*R2(1,3) ); % dya2
+
+			A(a-3,9) = ( x1(m)*R1(3,2) + f1*R1(1,2) ); % dza1
+			A(a-2,9) = ( x2(m)*R2(3,2) + f2*R2(1,2) ); % dza2
+		end
+
+		if m == 2
+
+			A(a-3,10) = ( x1(m)*R1(3,1) + f1*R1(1,1) ); % dxa1
+			A(a-2,10) = ( x2(m)*R2(3,1) + f2*R2(1,1) ); % dxa2
+
+			A(a-3,11) = ( -x1(m)*R1(3,3) - f1*R1(1,3) ); % dya1
+			A(a-2,11) = ( -x2(m)*R2(3,3) - f2*R2(1,3) ); % dya2
+
+			A(a-3,12) = ( x1(m)*R1(3,2) + f1*R1(1,2) ); % dza1
+			A(a-2,12) = ( x2(m)*R2(3,2) + f2*R2(1,2) ); % dza2
+		end
+
+		if m == 3
+
+			A(a-3,13) = ( x1(m)*R1(3,1) + f1*R1(1,1) ); % dxa1
+			A(a-2,13) = ( x2(m)*R2(3,1) + f2*R2(1,1) ); % dxa2
+
+			A(a-3,14) = ( -x1(m)*R1(3,3) - f1*R1(1,3) ); % dya1
+			A(a-2,14) = ( -x2(m)*R2(3,3) - f2*R2(1,3) ); % dya2
+
+			A(a-3,15) = ( x1(m)*R1(3,2) + f1*R1(1,2) ); % dza1
+			A(a-2,15) = ( x2(m)*R2(3,2) + f2*R2(1,2) ); % dza2
+		end
+
+		if m == 4
+
+			A(a-3,16) = ( x1(m)*R1(3,1) + f1*R1(1,1) ); % dxa1
+			A(a-2,16) = ( x2(m)*R2(3,1) + f2*R2(1,1) ); % dxa2
+
+			A(a-3,17) = ( -x1(m)*R1(3,3) - f1*R1(1,3) ); % dya1
+			A(a-2,17) = ( -x2(m)*R2(3,3) - f2*R2(1,3) ); % dya2
+
+			A(a-3,18) = ( x1(m)*R1(3,2) + f1*R1(1,2) ); % dza1
+			A(a-2,18) = ( x2(m)*R2(3,2) + f2*R2(1,2) ); % dza2
+		end
+
+
 
 		%%elements from differentials of F2
-		A(a,1) = ( -y(m)*R(3,1) - f*R(2,1) ); % dxo
-		A(a,2) = ( y(m)*R(3,3) + f*R(2,3) ); % dyo
-		A(a,3) = ( -y(m)*R(3,2) - f*R(2,2) ); % dzo
 
-		A(a,4) = y(m)*( drw(3,1)*(X(m)-IP(1)) + drw(3,2)*(Z(m)-IP(3)) - drw(3,3)*(Y(m)-IP(2)) ) + f*( drw(2,1)*(X(m)-IP(1)) + drw(2,2)*(Z(m)-IP(3)) - drw(2,3)*(Y(m)-IP(2)) ); % dw
+		A(a-1,1) = ( -y1(m)*R1(3,1) - f1*R1(2,1) ); % dxo1
+		A(a,1) = ( -y2(m)*R2(3,1) - f2*R2(2,1) ); % dxo2
 
-		A(a,5) = y(m)*( drp(3,1)*(X(m)-IP(1)) + drp(3,2)*(Z(m)-IP(3)) - drp(3,3)*(Y(m)-IP(2)) ) + f*( drp(2,1)*(X(m)-IP(1)) + drp(2,2)*(Z(m)-IP(3)) - drp(2,3)*(Y(m)-IP(2)) ); % dp
+		A(a-1,2) = ( y1(m)*R1(3,3) + f1*R1(2,3) ); % dyo1
+		A(a,2) = ( y2(m)*R2(3,3) + f2*R2(2,3) ); % dyo2
 
-		A(a,6) = y(m)*( drk(3,1)*(X(m)-IP(1)) + drk(3,2)*(Z(m)-IP(3)) - drk(3,3)*(Y(m)-IP(2)) ) + f*( drk(2,1)*(X(m)-IP(1)) + drk(2,2)*(Z(m)-IP(3)) - drk(2,3)*(Y(m)-IP(2)) ); % dk
+		A(a-1,3) = ( -y1(m)*R1(3,2) - f1*R1(2,2) ); % dzo1
+		A(a,3) = ( -y1(m)*R1(3,2) - f1*R1(2,2) ); % dzo2
 
-		A(a,7) = ( y(m)*R(3,1) + f*R(2,1) ); % dxa
-		A(a,8) = ( -y(m)*R(3,3) - f*R(2,3) ); % dya
-		A(a,9) = ( y(m)*R(3,2) + f*R(2,2) ); % dza
+		A(a-1,4) = y1(m)*( drw1(3,1)*(X(m)-IP1(1)) + drw1(3,2)*(Z(m)-IP1(3)) - drw1(3,3)*(Y(m)-IP1(2)) ) + f1*( drw1(2,1)*(X(m)-IP1(1)) + drw1(2,2)*(Z(m)-IP1(3)) - drw1(2,3)*(Y(m)-IP1(2)) ); % dw1
+		A(a,4) = y2(m)*( drw2(3,1)*(X(m)-IP2(1)) + drw2(3,2)*(Z(m)-IP2(3)) - drw2(3,3)*(Y(m)-IP2(2)) ) + f2*( drw2(2,1)*(X(m)-IP2(1)) + drw2(2,2)*(Z(m)-IP2(3)) - drw2(2,3)*(Y(m)-IP2(2)) ); % dw2
+
+		A(a-1,5) = y1(m)*( drp1(3,1)*(X(m)-IP1(1)) + drp1(3,2)*(Z(m)-IP1(3)) - drp1(3,3)*(Y(m)-IP1(2)) ) + f1*( drp1(2,1)*(X(m)-IP1(1)) + drp1(2,2)*(Z(m)-IP1(3)) - drp1(2,3)*(Y(m)-IP1(2)) ); % dp1
+		A(a,5) = y2(m)*( drp2(3,1)*(X(m)-IP2(1)) + drp2(3,2)*(Z(m)-IP2(3)) - drp2(3,3)*(Y(m)-IP2(2)) ) + f1*( drp2(2,1)*(X(m)-IP2(1)) + drp2(2,2)*(Z(m)-IP2(3)) - drp2(2,3)*(Y(m)-IP2(2)) ); % dp2
+
+		A(a-1,6) = y1(m)*( drk1(3,1)*(X(m)-IP1(1)) + drk1(3,2)*(Z(m)-IP1(3)) - drk1(3,3)*(Y(m)-IP1(2)) ) + f1*( drk1(2,1)*(X(m)-IP1(1)) + drk1(2,2)*(Z(m)-IP1(3)) - drk1(2,3)*(Y(m)-IP1(2)) ); % dk1
+		A(a,6) = y2(m)*( drk2(3,1)*(X(m)-IP2(1)) + drk2(3,2)*(Z(m)-IP2(3)) - drk2(3,3)*(Y(m)-IP2(2)) ) + f2*( drk2(2,1)*(X(m)-IP2(1)) + drk2(2,2)*(Z(m)-IP2(3)) - drk2(2,3)*(Y(m)-IP2(2)) ); % dk2
+
+		if m == 1
+			A(a-1,7) = ( y1(m)*R1(3,1) + f1*R1(2,1) ); % dxa1
+			A(a,7) = ( y2(m)*R2(3,1) + f2*R2(2,1) ); % dxa2
+
+			A(a-1,8) = ( -y1(m)*R1(3,3) - f1*R1(2,3) ); % dya1
+			A(a,8) = ( -y2(m)*R2(3,3) - f2*R2(2,3) ); % dya2
+
+			A(a-1,9) = ( y1(m)*R1(3,2) + f1*R1(2,2) ); % dza1
+			A(a,9) = ( y2(m)*R2(3,2) + f2*R2(2,2) ); % dza2
+		end
+
+		if m == 2
+
+			A(a-1,10) = ( y1(m)*R1(3,1) + f1*R1(2,1) ); % dxa1
+			A(a,10) = ( y2(m)*R2(3,1) + f2*R2(2,1) ); % dxa2
+
+			A(a-1,11) = ( -y1(m)*R1(3,3) - f1*R1(2,3) ); % dya1
+			A(a,11) = ( -y2(m)*R2(3,3) - f2*R2(2,3) ); % dya2
+
+			A(a-1,12) = ( y1(m)*R1(3,2) + f1*R1(2,2) ); % dza1
+			A(a,12) = ( y2(m)*R2(3,2) + f2*R2(2,2) ); % dza2
+		end
+
+		if m == 3
+
+			A(a-1,13) = ( y1(m)*R1(3,1) + f1*R1(2,1) ); % dxa1
+			A(a,13) = ( y2(m)*R2(3,1) + f2*R2(2,1) ); % dxa2
+
+			A(a-1,14) = ( -y1(m)*R1(3,3) - f1*R1(2,3) ); % dya1
+			A(a,14) = ( -y2(m)*R2(3,3) - f2*R2(2,3) ); % dya2
+
+			A(a-1,15) = ( y1(m)*R1(3,2) + f1*R1(2,2) ); % dza1
+			A(a,15) = ( y2(m)*R2(3,2) + f2*R2(2,2) ); % dza2
+		end
+
+		if m == 4
+
+			A(a-1,16) = ( y1(m)*R1(3,1) + f1*R1(2,1) ); % dxa1
+			A(a,16) = ( y2(m)*R2(3,1) + f2*R2(2,1) ); % dxa2
+
+			A(a-1,17) = ( -y1(m)*R1(3,3) - f1*R1(2,3) ); % dya1
+			A(a,17) = ( -y2(m)*R2(3,3) - f2*R2(2,3) ); % dya2
+
+			A(a-1,18) = ( y1(m)*R1(3,2) + f1*R1(2,2) ); % dza1
+			A(a,18) = ( y2(m)*R2(3,2) + f2*R2(2,2) ); % dza2
+		end
 	end
 end
