@@ -209,6 +209,31 @@ end
 EO2 = IP2;	% Photo2 E.O params
 
 
-A = getA(EO1, EO2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
+dx = zeros(12,1);	sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
-L2 = getL(IP1, IP2, x1, x2, y1, y2, CPX, CPY, CPZ, R1, R2, f1, f2) % Combined L matrix
+for m=1:2
+	flag = dx;
+	A = getA(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
+
+	L = getL(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2); % Combined L matrix
+
+	dx = getDx(A, L); % shift elements for unknown points
+
+	for i=1:4
+		m = i*3;
+		sx(i) = dx(m-2); % photo 1 shifts
+		sy(i) = dx(m-1); % photo 2 shifts
+		sz(i) = dx(m); % photo 2 shifts
+	end
+
+	APX = APX+sx;
+	APY = APY+sy;
+	APZ = APZ+sz;
+
+	if flag - dx <= zeros(12,1)
+		m
+		break
+	end
+end
+
+RESULTS = [ APX APY APZ ]
