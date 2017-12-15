@@ -117,7 +117,7 @@ s1 = zeros(6,1);	s2 = zeros(6,1);
 sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
 
-for m=1:9
+for m=1:1
 
 	A = getA(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix
 
