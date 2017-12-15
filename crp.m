@@ -112,11 +112,41 @@ IP2 = [
 f1 = 165.89; % Photo 1 f
 f2 = 165.77; % Photo 2 f
 
-% dx = zeros(12,1);	sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
+dx = zeros(12,1);
+s1 = zeros(6,1);	s2 = zeros(6,1);
+sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
-A = getA(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix
 
-L = getL(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2); % Combined L matrix
+for m=1:9
 
-dx = getDx(A, L); % shift elements
+	A = getA(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix
 
+	L = getL(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2); % Combined L matrix
+
+	dx = getDx(A, L); % shift elements
+
+	for i=1:6
+		m = i*2;
+		s1(i) = dx(m-1); % IP1 shifts
+		s2(i) = dx(m); % IP2 shifts
+	end
+
+	for i=1:4
+		m = i*3+12;
+		sx(i) = dx(m-2); % photo 1 shifts
+		sy(i) = dx(m-1); % photo 2 shifts
+		sz(i) = dx(m); % photo 2 shifts
+	end
+	IP1 = IP1 + s1;
+	IP2 = IP2 + s2;
+	X(2) = X(2)+sx(1);	X(5) = X(5)+sx(2);	X(7) = X(7)+sx(3);	X(8) = X(8)+sx(4);
+	Y(2) = Y(2)+sy(1);	Y(5) = Y(5)+sy(2);	Y(7) = Y(7)+sy(3);	Y(8) = Y(8)+sy(4);
+	Z(2) = Z(2)+sz(1);	Z(5) = Z(5)+sz(2);	Z(7) = Z(7)+sz(3);	Z(8) = Z(8)+sz(4);
+end
+
+RESULTS = [
+	X(2) Y(2) Z(2)
+	X(5) Y(5) Z(5)
+	X(7) Y(7) Z(7)
+	X(8) Y(8) Z(8)
+]
