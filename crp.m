@@ -62,6 +62,17 @@ X = [
 ];
 
 Y = [
+	2022.36
+	2080
+	2080.31
+	1986.42
+	2107
+	2129.39
+	2008
+	2188
+]; % given as Z
+
+Z = [
 	695.81
 	439
 	206.06
@@ -70,18 +81,8 @@ Y = [
 	245.96
 	645
 	424
-];
+]; % given as Y
 
-Z = [
-	2022.36
-	2088
-	2080.31
-	1986.42
-	2107
-	2129.39
-	2008
-	2188
-];
 
 % IP = [XO, YO, ZO, w, p, k] , initial parameter format
 
@@ -89,8 +90,8 @@ Z = [
 
 IP1 = [
 	2480
-	378
 	559
+	378
 	0
 	0
 	0
@@ -100,8 +101,8 @@ IP1 = [
 
 IP2 = [
 	3033
-	377
 	469
+	377
 	0
 	0
 	0
@@ -117,13 +118,13 @@ s1 = zeros(6,1);	s2 = zeros(6,1);
 sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
 
-for m=1:9
+for m=1:3
 
 	A = getA(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix
 
 	L = getL(IP1, IP2, x1, x2, y1, y2, X, Y, Z, R1, R2, f1, f2); % Combined L matrix
 
-	dx = getDx(A, L); % shift elements
+	dx = getDx(A, L) % shift elements
 
 	for i=1:6
 		m = i*2;
