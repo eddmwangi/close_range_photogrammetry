@@ -143,8 +143,6 @@ dx1 = zeros(6, 1); dx2 = zeros(6, 1);
 % Photo1
 for m=1:4
 
-	flag = dx1;
-
 	%  Rotational Matrix
 
 	R1 = getR( IP1(4), IP1(5), IP1(6) );
@@ -163,21 +161,16 @@ for m=1:4
 
 	% Get shift matrix, dx
 
-	dx1 = getDx(A1, L1) % photo1 shift elements
+	dx1 = getDx(A1, L1); % photo1 shift elements
 
 	IP1 = IP1 + dx1;
 
-	if flag - dx1 == zeros(6,1)
-		m
-		break
-	end
+	deviations = getDeviations(A1, L1, dx1);
 end
 EO1 = IP1	% Photo1 E.O params
 
 % Photo2
 for m=1:4
-
-	flag = dx2;
 
 	%  Rotational Matrix
 
@@ -201,18 +194,17 @@ for m=1:4
 
 	IP2 = IP2 + dx2;
 
-	if (flag - dx2) <= zeros(6, 1)
-		m
-		break
-	end
+	deviations = getDeviations(A2, L2, dx2);
 end
 EO2 = IP2	% Photo2 E.O params
 
 
+% new points
+
 dx = zeros(12,1);	sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
 for m=1:4
-	flag = dx;
+
 	A = getA(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
 
 	L = getL(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2); % Combined L matrix
@@ -230,10 +222,7 @@ for m=1:4
 	APY = APY+sy;
 	APZ = APZ+sz;
 
-	if flag - dx <= zeros(12,1)
-		m
-		break
-	end
+	deviations = getDeviations(A, L, dx)
 end
 
 RESULTS = [ APX APY APZ ]
