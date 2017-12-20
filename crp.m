@@ -141,7 +141,7 @@ f2 = 165.77; % Photo 2 f
 dx1 = zeros(6, 1); dx2 = zeros(6, 1);
 
 % Photo1
-for m=1:12
+for m=1:4
 
 	flag = dx1;
 
@@ -163,7 +163,7 @@ for m=1:12
 
 	% Get shift matrix, dx
 
-	dx1 = getDx(A1, L1); % photo1 shift elements
+	dx1 = getDx(A1, L1) % photo1 shift elements
 
 	IP1 = IP1 + dx1;
 
@@ -172,10 +172,10 @@ for m=1:12
 		break
 	end
 end
-EO1 = IP1;	% Photo1 E.O params
+EO1 = IP1	% Photo1 E.O params
 
 % Photo2
-for m=1:202
+for m=1:4
 
 	flag = dx2;
 
@@ -206,12 +206,12 @@ for m=1:202
 		break
 	end
 end
-EO2 = IP2;	% Photo2 E.O params
+EO2 = IP2	% Photo2 E.O params
 
 
 dx = zeros(12,1);	sx = zeros(4,1);	sy = zeros(4,1);	sz = zeros(4,1);
 
-for m=1:2
+for m=1:4
 	flag = dx;
 	A = getA(EO1, EO2, x1, x2, y1, y2, APX, APY, APZ, R1, R2, f1, f2, drw1, drw2, drp1, drp2, drk1, drk2); % Combined A matrix for unknown points
 
