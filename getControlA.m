@@ -1,4 +1,4 @@
-function A = getA(IP,x,y,X,Y,Z,R,f,drw,drp,drk)
+function A = getControlA(IP,x,y,X,Y,Z,R,f,drw,drp,drk)
 	format short
 	%%%%%%% input parameters are:
 	% IP: Initial Parameter matrix

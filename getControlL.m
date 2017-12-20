@@ -1,5 +1,5 @@
 %compute and form an L matrix
-function L = getL(IP,x,y,X,Y,Z,R,f)
+function L = getControlL(IP,x,y,X,Y,Z,R,f)
 	n = length(x);   % number of data points. =len(y)=len(X)=len(Y)=len(Z)
 	L = zeros(n*2,1);
 	for m=1:n
